@@ -1,6 +1,4 @@
-extern "C" {
-#include "socket.h"
-}
+#include "common_socket.h"
 
 #ifndef NET_H
 #define NET_H

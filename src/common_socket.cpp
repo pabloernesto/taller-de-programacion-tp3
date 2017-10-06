@@ -1,6 +1,6 @@
 #define _POSIX_C_SOURCE 201709L
 #define _ISOC99_SOURCE //snprintf
-#include "socket.h"
+#include "common_socket.h"
 
 #include <sys/types.h>
 #include <string.h>
@@ -16,7 +16,7 @@ static int _getaddrinfo(const char *host_name, unsigned short port,
 
 int socket_create(socket_t *self) {
     if (!self) return -2;
-    *self = (socket_t){.socket=socket(AF_INET, SOCK_STREAM, 0)};
+    *self = {socket(AF_INET, SOCK_STREAM, 0)};
     if (self->socket == -1) return -1;
     return 0;
 }
@@ -50,12 +50,10 @@ static int _getaddrinfo(const char *host_name, unsigned short port,
     char portString[6];
     snprintf(portString, sizeof(portString), "%d", port);
 
-    struct addrinfo hints = (struct addrinfo) {
-        .ai_flags=AI_PASSIVE,
-        .ai_family=AF_INET,
-        .ai_socktype=SOCK_STREAM
-    };
-
+    struct addrinfo hints = {};
+    hints.ai_flags = AI_PASSIVE;
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
     if (getaddrinfo(host_name, portString, &hints, out)) return -1;
     return 0;
 }
@@ -77,7 +75,7 @@ int socket_connect(socket_t *self, const char* host_name, unsigned short port) {
 
 int socket_accept(socket_t *self, socket_t* accepted_socket) {
     if ((!self) || (self->socket < 0)) return -2;
-    *accepted_socket = (socket_t){.socket=accept(self->socket, NULL, NULL)};
+    *accepted_socket = {accept(self->socket, NULL, NULL)};
     if (accepted_socket->socket < 0) return -1;
     return 0;
 }

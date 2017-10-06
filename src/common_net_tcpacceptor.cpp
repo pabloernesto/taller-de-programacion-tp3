@@ -1,9 +1,7 @@
 #include "common_net.h"
 #include <stdexcept>
 
-extern "C" {
-#include "socket.h"
-}
+#include "common_socket.h"
 
 using namespace std;
 
