@@ -20,4 +20,11 @@ public:
     TCPSocket accept();
 };
 
+TCPSocket& operator<<(TCPSocket& os, const char val);
+TCPSocket& operator<<(TCPSocket& os, const int val);
+TCPSocket& operator<<(TCPSocket& os, const unsigned int val);
+
+TCPSocket& operator>>(TCPSocket& os, char &val);
+TCPSocket& operator>>(TCPSocket& os, int &val);
+TCPSocket& operator>>(TCPSocket& os, unsigned int &val);
 #endif
