@@ -29,11 +29,14 @@ TCPSocket& operator>>(TCPSocket& s, Transaction& val) {
 }
 
 TCPSocket& operator<<(TCPSocket& s, const Transaction& val) {
-    //~ s << val.command;
-    //~ s << val.card;
+    s.send(&(val.command), 1);
+    char buf[11];
+    snprintf(buf, 11, "%010u", val.card);
+    s.send(buf, 10);
     if ((val.command == 'A') || (val.command == 'F') ||
-        (val.command == 'R'))
-        //~ s << val.sum;
-        ;
+            (val.command == 'R')) {
+        snprintf(buf, 11, "%010d", val.sum);
+        s.send(buf, 10);
+    }
     return s;
 }
