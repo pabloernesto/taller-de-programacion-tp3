@@ -5,6 +5,20 @@
 
 using namespace std;
 
+TCPSocket::TCPSocket(const char* host, unsigned short port) {
+    int errcode = socket_create(&(this->socket));
+    if (errcode < 0) throw runtime_error("Failed to create port "
+            "socket_create failed with code " + to_string(errcode));
+
+    errcode = socket_connect(&(this->socket), host, port);
+    if (errcode < 0) {
+        socket_destroy(&(this->socket));
+        throw runtime_error("Could not connect to port " +
+                to_string(port) + " on host " + host + " "
+                "socket_create failed with code " + to_string(errcode));
+    }
+}
+
 TCPSocket::TCPSocket(socket_t socket) {
     this->socket = socket;
 }
