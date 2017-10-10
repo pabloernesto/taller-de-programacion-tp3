@@ -4,6 +4,14 @@
 
 using namespace std;
 
+Transaction::Transaction() {}
+
+Transaction::Transaction(char op, unsigned int card) : command(op), card(card),
+        sum(0) {}
+
+Transaction::Transaction(char op, unsigned int card, int sum) : command(op),
+        card(card), sum(sum) {}
+
 ifstream& operator>>(ifstream& s, Transaction& val) {
     return s;
 }
