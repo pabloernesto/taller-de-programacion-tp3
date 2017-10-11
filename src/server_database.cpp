@@ -20,6 +20,11 @@ int DB::consultarMonto(unsigned int card) {
 }
 
 void DB::registrarTarjeta(unsigned int card) {
+    auto ptr = this->cards.find(card);
+    if (ptr != this->cards.end())
+        throw runtime_error("Se intento registrar tarjeta existente "
+                + to_string(card));
+    this->cards[card] = 0;
 }
 
 void DB::asignarMonto(unsigned int card) {

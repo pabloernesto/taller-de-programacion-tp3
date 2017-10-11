@@ -9,9 +9,11 @@ static void pass();
 #define fail(message) cerr << __FUNCTION__ << " failed: " << message << endl
 
 static void emptyThrows();
+static void newCardIsEmpty();
 
 int main(int argc, char** argv) {
     emptyThrows();
+    newCardIsEmpty();
 }
 
 static void pass() {
@@ -26,4 +28,12 @@ static void emptyThrows() {
     } catch (std::exception) {
         pass();
     }
+}
+
+static void newCardIsEmpty() {
+    DB db;
+    db.registrarTarjeta(1);
+    int m = db.consultarMonto(1);
+    if (m != 0) fail("new card returned " + to_string(m) + " sum");
+    pass();
 }
