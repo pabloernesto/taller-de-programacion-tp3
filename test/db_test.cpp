@@ -12,6 +12,7 @@ static void poll_emptyCard_throws();
 static void newCardIsEmpty();
 static void repeatedRegistrationThrows();
 
+static void add_unregisteredCard_throws();
 static void addPositiveSumOk();
 static void addNegativeSumOk();
 static void addNegativeSum_notEnoughMoney_throws();
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
     newCardIsEmpty();
     repeatedRegistrationThrows();
 
+    add_unregisteredCard_throws();
     addPositiveSumOk();
     addNegativeSumOk();
     addNegativeSum_notEnoughMoney_throws();
@@ -69,6 +71,16 @@ static void repeatedRegistrationThrows() {
     db.registrarTarjeta(1);
     try { db.registrarTarjeta(1); fail("nothing happened"); }
     catch (std::exception) { pass(); }
+}
+
+static void add_unregisteredCard_throws() {
+    DB db;
+    try {
+        int m = db.agregarMonto(1, 100);
+        fail("nothing happened, returned " + to_string(m));
+    } catch (std::exception) {
+        pass();
+    }
 }
 
 static void addPositiveSumOk() {
