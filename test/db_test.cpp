@@ -14,6 +14,7 @@ static void repeatedRegistrationThrows();
 static void addPositiveSumOk();
 static void addNegativeSumOk();
 static void setSumOk();
+static void setSum_emptyCard_throws();
 
 int main(int argc, char** argv) {
     emptyThrows();
@@ -22,6 +23,7 @@ int main(int argc, char** argv) {
     addPositiveSumOk();
     addNegativeSumOk();
     setSumOk();
+    setSum_emptyCard_throws();
 }
 
 static void pass() {
@@ -81,4 +83,10 @@ static void setSumOk() {
     int m = db.consultarMonto(1);
     if (m == 1337) pass();
     else fail("wrong sum. Expected 1337 got " + to_string(m));
+}
+
+static void setSum_emptyCard_throws() {
+    DB db;
+    try { db.asignarMonto(1, 1337); fail("nothing happened"); }
+    catch (std::exception) { pass(); }
 }
