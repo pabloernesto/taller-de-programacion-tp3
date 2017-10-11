@@ -11,9 +11,15 @@ static void pass();
 static void emptyThrows();
 static void newCardIsEmpty();
 static void repeatedRegistrationThrows();
+
 static void addPositiveSumOk();
 static void addNegativeSumOk();
 static void addNegativeSum_notEnoughMoney_throws();
+
+static void forcePositiveSumOk();
+static void forceNegativeSumOk();
+static void forceNegativeSum_notEnoughMoney_ok();
+
 static void setSumOk();
 static void setSum_emptyCard_throws();
 
@@ -21,9 +27,15 @@ int main(int argc, char** argv) {
     emptyThrows();
     newCardIsEmpty();
     repeatedRegistrationThrows();
+
     addPositiveSumOk();
     addNegativeSumOk();
     addNegativeSum_notEnoughMoney_throws();
+
+    forcePositiveSumOk();
+    forceNegativeSumOk();
+    forceNegativeSum_notEnoughMoney_ok();
+
     setSumOk();
     setSum_emptyCard_throws();
 }
@@ -88,6 +100,34 @@ static void addNegativeSum_notEnoughMoney_throws() {
     } catch (std::exception) {
         pass();
     }
+}
+
+static void forcePositiveSumOk() {
+    DB db;
+    db.registrarTarjeta(1);
+    int m = db.forzarAgregarMonto(1, 100);
+
+    if (m == 100) pass();
+    else fail("wrong sum. Expected 100, got " + to_string(m));
+}
+
+static void forceNegativeSumOk() {
+    DB db;
+    db.registrarTarjeta(1);
+    db.forzarAgregarMonto(1, 100);
+    int m = db.forzarAgregarMonto(1, -50);
+
+    if (m == 50) pass();
+    else fail("wrong sum. Expected 50, got " + to_string(m));
+}
+
+static void forceNegativeSum_notEnoughMoney_ok() {
+    DB db;
+    db.registrarTarjeta(1);
+    int m = db.forzarAgregarMonto(1, -314);
+
+    if (m == -314) pass();
+    else fail("wrong sum. Expected -314, got " + to_string(m));
 }
 
 static void setSumOk() {
