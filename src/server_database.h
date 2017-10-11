@@ -1,7 +1,11 @@
+#include <map>
+#include <limits.h>
+
 #ifndef DATABASE_H
 #define DATABASE_H
 
 class DB {
+    std::map<unsigned int, int> cards{{0, INT_MAX}};
 public:
     int agregarMonto(unsigned int card);
     int forzarAgregarMonto(unsigned int card);
