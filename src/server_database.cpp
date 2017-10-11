@@ -8,6 +8,9 @@ int DB::agregarMonto(unsigned int card, int sum) {
     if (ptr == this->cards.end())
         throw runtime_error("Se intento modificar tarjeta no inicializada "
                 + to_string(card));
+    if (sum < 0 && (ptr->second + sum) < 0)
+        throw runtime_error("Dinero insuficiente. Monto: " + to_string(sum)
+                + " Saldo: " + to_string(ptr->second));
     return ptr->second += sum;
 }
 

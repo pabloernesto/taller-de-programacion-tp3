@@ -13,6 +13,7 @@ static void newCardIsEmpty();
 static void repeatedRegistrationThrows();
 static void addPositiveSumOk();
 static void addNegativeSumOk();
+static void addNegativeSum_notEnoughMoney_throws();
 static void setSumOk();
 static void setSum_emptyCard_throws();
 
@@ -22,6 +23,7 @@ int main(int argc, char** argv) {
     repeatedRegistrationThrows();
     addPositiveSumOk();
     addNegativeSumOk();
+    addNegativeSum_notEnoughMoney_throws();
     setSumOk();
     setSum_emptyCard_throws();
 }
@@ -74,6 +76,18 @@ static void addNegativeSumOk() {
     if (m == 42) pass();
     else fail("wrong sum. Expected the meaning of life, the universe, "
             "and everything, got " + to_string(m));
+}
+
+static void addNegativeSum_notEnoughMoney_throws() {
+    DB db;
+    db.registrarTarjeta(1);
+    db.agregarMonto(1, 100);
+    try {
+        int m = db.agregarMonto(1, -200);
+        fail("nothing happened, agregarMonto returned " + to_string(m));
+    } catch (std::exception) {
+        pass();
+    }
 }
 
 static void setSumOk() {
