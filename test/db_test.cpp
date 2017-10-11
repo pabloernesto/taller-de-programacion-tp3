@@ -13,6 +13,7 @@ static void newCardIsEmpty();
 static void repeatedRegistrationThrows();
 static void addPositiveSumOk();
 static void addNegativeSumOk();
+static void setSumOk();
 
 int main(int argc, char** argv) {
     emptyThrows();
@@ -20,6 +21,7 @@ int main(int argc, char** argv) {
     repeatedRegistrationThrows();
     addPositiveSumOk();
     addNegativeSumOk();
+    setSumOk();
 }
 
 static void pass() {
@@ -70,4 +72,13 @@ static void addNegativeSumOk() {
     if (m == 42) pass();
     else fail("wrong sum. Expected the meaning of life, the universe, "
             "and everything, got " + to_string(m));
+}
+
+static void setSumOk() {
+    DB db;
+    db.registrarTarjeta(1);
+    db.asignarMonto(1, 1337);
+    int m = db.consultarMonto(1);
+    if (m == 1337) pass();
+    else fail("wrong sum. Expected 1337 got " + to_string(m));
 }

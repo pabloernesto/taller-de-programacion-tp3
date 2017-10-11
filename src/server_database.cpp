@@ -32,5 +32,10 @@ void DB::registrarTarjeta(unsigned int card) {
 }
 
 void DB::asignarMonto(unsigned int card, int sum) {
+    auto ptr = this->cards.find(card);
+    if (ptr == this->cards.end())
+        throw runtime_error("Se intento modificar tarjeta no inicializada "
+                + to_string(card));
+    ptr->second = sum;
 }
 
