@@ -11,11 +11,13 @@ static void pass();
 static void emptyThrows();
 static void newCardIsEmpty();
 static void repeatedRegistrationThrows();
+static void addPositiveSumOk();
 
 int main(int argc, char** argv) {
     emptyThrows();
     newCardIsEmpty();
     repeatedRegistrationThrows();
+    addPositiveSumOk();
 }
 
 static void pass() {
@@ -45,4 +47,14 @@ static void repeatedRegistrationThrows() {
     db.registrarTarjeta(1);
     try { db.registrarTarjeta(1); fail("nothing happened"); }
     catch (std::exception) { pass(); }
+}
+
+static void addPositiveSumOk() {
+    DB db;
+    db.registrarTarjeta(1);
+    db.agregarMonto(1, 100);
+    db.agregarMonto(1, 100);
+    int m = db.consultarMonto(1);
+    if (m == 200) pass();
+    else fail("wrong sum. Expected 200, got " + to_string(m));
 }

@@ -4,7 +4,11 @@
 using namespace std;
 
 int DB::agregarMonto(unsigned int card, int sum) {
-    return 0;
+    auto ptr = this->cards.find(card);
+    if (ptr == this->cards.end())
+        throw runtime_error("Se intento modificar tarjeta no inicializada "
+                + to_string(card));
+    return ptr->second += sum;
 }
 
 int DB::forzarAgregarMonto(unsigned int card, int sum) {
