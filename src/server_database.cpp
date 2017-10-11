@@ -3,11 +3,11 @@
 
 using namespace std;
 
-int DB::agregarMonto(unsigned int card) {
+int DB::agregarMonto(unsigned int card, int sum) {
     return 0;
 }
 
-int DB::forzarAgregarMonto(unsigned int card) {
+int DB::forzarAgregarMonto(unsigned int card, int sum) {
     return 0;
 }
 
@@ -27,6 +27,6 @@ void DB::registrarTarjeta(unsigned int card) {
     this->cards[card] = 0;
 }
 
-void DB::asignarMonto(unsigned int card) {
+void DB::asignarMonto(unsigned int card, int sum) {
 }
 
