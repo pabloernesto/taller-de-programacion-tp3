@@ -16,6 +16,7 @@ static void addPositiveSumOk();
 static void addNegativeSumOk();
 static void addNegativeSum_notEnoughMoney_throws();
 
+static void force_cardNotRegistered_throws();
 static void forcePositiveSumOk();
 static void forceNegativeSumOk();
 static void forceNegativeSum_notEnoughMoney_ok();
@@ -32,6 +33,7 @@ int main(int argc, char** argv) {
     addNegativeSumOk();
     addNegativeSum_notEnoughMoney_throws();
 
+    force_cardNotRegistered_throws();
     forcePositiveSumOk();
     forceNegativeSumOk();
     forceNegativeSum_notEnoughMoney_ok();
@@ -100,6 +102,14 @@ static void addNegativeSum_notEnoughMoney_throws() {
     } catch (std::exception) {
         pass();
     }
+}
+
+static void force_cardNotRegistered_throws() {
+    DB db;
+    try {
+        int m = db.forzarAgregarMonto(1, 100);
+        fail("nothing happened, forzarAgregarMonto returned " + to_string(m));
+    } catch (std::exception) { pass(); }
 }
 
 static void forcePositiveSumOk() {
