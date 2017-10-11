@@ -1,20 +1,20 @@
 #include "server_database.h"
 
-int DBagregarMonto(unsigned int card) {
+int DB::agregarMonto(unsigned int card) {
     return 0;
 }
 
-int DBforzarAgregarMonto(unsigned int card) {
+int DB::forzarAgregarMonto(unsigned int card) {
     return 0;
 }
 
-int DBconsultarMonto(unsigned int card) {
+int DB::consultarMonto(unsigned int card) {
     return 0;
 }
 
-void DBregistrarTarjeta(unsigned int card) {
+void DB::registrarTarjeta(unsigned int card) {
 }
 
-void DBasignarMonto(unsigned int card) {
+void DB::asignarMonto(unsigned int card) {
 }
 
