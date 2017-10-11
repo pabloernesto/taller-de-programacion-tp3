@@ -35,5 +35,5 @@ static void newCardIsEmpty() {
     db.registrarTarjeta(1);
     int m = db.consultarMonto(1);
     if (m != 0) fail("new card returned " + to_string(m) + " sum");
-    pass();
+    else pass();
 }
