@@ -5,9 +5,20 @@
 using namespace std;
 
 static void pass();
-static void fail(string message);
+
+#define fail(message) cerr << __FUNCTION__ << " failed: " << message << endl
+
+static void emptyThrows();
 
 int main(int argc, char** argv) {
+    emptyThrows();
+}
+
+static void pass() {
+    cout << "test passed" << endl;
+}
+
+static void emptyThrows() {
     try {
         DB db;
         int m = db.consultarMonto(1);
@@ -15,12 +26,4 @@ int main(int argc, char** argv) {
     } catch (std::exception) {
         pass();
     }
-}
-
-static void pass() {
-    cout << "test passed" << endl;
-}
-
-static void fail(string message) {
-    cerr << "test failed: " << message << endl;
 }
