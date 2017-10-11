@@ -8,7 +8,7 @@ static void pass();
 
 #define fail(message) cerr << __FUNCTION__ << " failed: " << message << endl
 
-static void emptyThrows();
+static void poll_emptyCard_throws();
 static void newCardIsEmpty();
 static void repeatedRegistrationThrows();
 
@@ -25,7 +25,7 @@ static void setSumOk();
 static void setSum_emptyCard_throws();
 
 int main(int argc, char** argv) {
-    emptyThrows();
+    poll_emptyCard_throws();
     newCardIsEmpty();
     repeatedRegistrationThrows();
 
@@ -46,7 +46,7 @@ static void pass() {
     cout << "test passed" << endl;
 }
 
-static void emptyThrows() {
+static void poll_emptyCard_throws() {
     try {
         DB db;
         int m = db.consultarMonto(1);
