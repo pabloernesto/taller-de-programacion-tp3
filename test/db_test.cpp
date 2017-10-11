@@ -10,10 +10,12 @@ static void pass();
 
 static void emptyThrows();
 static void newCardIsEmpty();
+static void repeatedRegistrationThrows();
 
 int main(int argc, char** argv) {
     emptyThrows();
     newCardIsEmpty();
+    repeatedRegistrationThrows();
 }
 
 static void pass() {
@@ -36,4 +38,11 @@ static void newCardIsEmpty() {
     int m = db.consultarMonto(1);
     if (m != 0) fail("new card returned " + to_string(m) + " sum");
     else pass();
+}
+
+static void repeatedRegistrationThrows() {
+    DB db;
+    db.registrarTarjeta(1);
+    try { db.registrarTarjeta(1); fail("nothing happened"); }
+    catch (std::exception) { pass(); }
 }
