@@ -5,6 +5,8 @@
 #include <bitset>
 #include <exception>
 
+#include <arpa/inet.h>
+
 using namespace std;
 
 Transaction::Transaction() {}
@@ -18,11 +20,13 @@ Transaction::Transaction(char op, unsigned int card, int sum) : command(op),
 /* Parses metadata stored in input, and returns it in out.
  * out will contain, in order: card checksum, sum checksum, and operation number
  */
-static void parse_meta(short input, short *out) {
+static void parse_meta(short input, unsigned short *out) {
     /* 65431 09876 543 210 <- index
      * 00000 00000 001 000 <- value (0x8)
      * card  sum   op  ---
      */
+
+    input = ntohs(input);
 
     // Extract card checksum
     bitset<16> meta = input;
@@ -43,7 +47,7 @@ ifstream& operator>>(ifstream& s, Transaction& val) {
     short raw_meta;
     s.read((char*)&raw_meta, 2);
 
-    short meta[3];
+    unsigned short meta[3];
     parse_meta(raw_meta, meta);
 
     if (meta[2] == 0) val.command = 'A';
