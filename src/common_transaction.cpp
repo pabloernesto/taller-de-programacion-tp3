@@ -1,6 +1,9 @@
 #include "common_transaction.h"
 
 #include <stdlib.h>
+#include <fstream>
+#include <bitset>
+#include <exception>
 
 using namespace std;
 
@@ -13,10 +16,31 @@ Transaction::Transaction(char op, unsigned int card, int sum) : command(op),
         card(card), sum(sum) {}
 
 ifstream& operator>>(ifstream& s, Transaction& val) {
-    return s;
-}
+    short raw_meta;
+    s.read((char*)&raw_meta, 2);
 
-ofstream& operator<<(ofstream& s, const Transaction& val) {
+    /* 65431 09876 543 210 <- index
+     * 00000 00000 001 000 <- value (0x8)
+     * card  sum   op  ---
+     */
+    bitset<16> meta = raw_meta;
+    //~ short card_checksum = (meta >> 11).to_ulong();
+
+    // Keep last five bits
+    bitset<16> mask = 0x1f;
+    //~ short sum_checksum = ((meta >> 6) & mask).to_ulong();
+
+    // Keep last three bits
+    mask = 0x7;
+    short operation = ((meta >> 3) & mask).to_ulong();
+
+    if (operation == 0) val.command = 'A';
+    else if (operation == 1) val.command = 'F';
+    else if (operation == 2) val.command = 'P';
+    else if (operation == 3) val.command = 'R';
+    else if (operation == 4) val.command = 'S';
+    else throw runtime_error("unknown operation " + to_string(operation));
+
     return s;
 }
 

@@ -17,7 +17,6 @@ public:
     char getCommand() { return this->command; }
 
     friend std::ifstream& operator>>(std::ifstream& s, Transaction& val);
-    friend std::ofstream& operator<<(std::ofstream& s, const Transaction& val);
 
     friend TCPSocket& operator>>(TCPSocket& s, Transaction& val);
     friend TCPSocket& operator<<(TCPSocket& s, const Transaction& val);
