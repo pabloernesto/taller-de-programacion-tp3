@@ -7,11 +7,13 @@ using namespace std;
 
 int main(int argc, char** argv) {
     //if (argc != 2) cerr << "server <port>" << endl;
-    TCPAcceptor ac{8080};
-    TCPSocket so = ac.accept();
+    TCPAcceptor acceptor(8080);
+    TCPSocket socket = acceptor.accept();
 
     Transaction t;
-    so >> t;
-
-    cout << t.getCommand();
+    while (true) {
+        try { socket >> t; }
+        catch (exception) { break; }
+        cout << t.getCommand();
+    }
 }

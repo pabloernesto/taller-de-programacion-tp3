@@ -7,8 +7,12 @@
 using namespace std;
 
 int main(int argc, char** argv) {
+    TCPSocket sock("127.0.0.1", 8080);
     ifstream file("data.bin", ios::in | ios::binary);
-    Transaction t;
-    file >> t;
-    cout << t.getCommand() << endl;
+
+    while (file) {
+        Transaction t;
+        file >> t;
+        sock << t;
+    }
 }
