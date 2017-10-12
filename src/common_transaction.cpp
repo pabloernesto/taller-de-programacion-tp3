@@ -64,6 +64,17 @@ ifstream& operator>>(ifstream& s, Transaction& val) {
         throw runtime_error("bad card " + to_string(val.card) + " cheksum "
                 + to_string(meta[0]));
 
+    if (val.command == 'A' || val.command == 'F' || val.command == 'S') {
+        s.read((char*) &val.sum, 4);
+        val.sum = ntohl(val.sum);
+        bitset<32> sum = val.sum;
+        if (sum.count() != meta[1]) throw runtime_error("bad sum "
+                + to_string(val.sum) + " checksum " + to_string(meta[1]));
+    } else {
+        if (meta[1] != 0) throw runtime_error("bad sum checksum: expected 0, "
+                "got " + to_string(meta[1]));
+    }
+
     return s;
 }
 
