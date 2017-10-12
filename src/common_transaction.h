@@ -15,6 +15,8 @@ public:
     Transaction(char op, unsigned int card, int sum);
 
     char getCommand() { return this->command; }
+    unsigned int getCard() { return this->card; }
+    int getSum() { return this->sum; }
 
     friend std::ifstream& operator>>(std::ifstream& s, Transaction& val);
 
