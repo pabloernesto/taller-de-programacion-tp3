@@ -57,6 +57,12 @@ ifstream& operator>>(ifstream& s, Transaction& val) {
     else if (meta[2] == 4) val.command = 'S';
     else throw runtime_error("unknown operation " + to_string(meta[2]));
 
+    s.read((char*) &(val.card), 4);
+    bitset<32> card = val.card;
+    if (card.count() != meta[0])
+        throw runtime_error("bad card " + to_string(val.card) + " cheksum "
+                + to_string(meta[0]));
+
     return s;
 }
 
