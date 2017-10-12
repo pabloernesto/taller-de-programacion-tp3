@@ -80,14 +80,14 @@ ifstream& operator>>(ifstream& s, Transaction& val) {
 
 TCPSocket& operator>>(TCPSocket& s, Transaction& val) {
     char buf[12];
-    s.receive(buf, 11);
+    if (s.receive(buf, 11) < 0) throw runtime_error("connection shut down");
     buf[11] = '\0';
 
     val.command = buf[0];
     val.card = strtoul(buf + 1, nullptr, 10);
     if ((val.command == 'A') || (val.command == 'F') ||
             (val.command == 'R')) {
-        s.receive(buf, 10);
+        if (s.receive(buf, 10) < 0) throw runtime_error("connection shut down");
         buf[10] = '\0';
         val.sum = strtol(buf, nullptr, 10);
     }
@@ -95,14 +95,17 @@ TCPSocket& operator>>(TCPSocket& s, Transaction& val) {
 }
 
 TCPSocket& operator<<(TCPSocket& s, const Transaction& val) {
-    s.send(&(val.command), 1);
+    if (s.send(&(val.command), 1) < 0)
+        throw runtime_error("connection shut down, recoverable: nothing sent");
     char buf[11];
     snprintf(buf, 11, "%010u", val.card);
-    s.send(buf, 10);
+    if (s.send(buf, 10) < 0) throw runtime_error("connection shut down "
+            "mid transmission");
     if ((val.command == 'A') || (val.command == 'F') ||
             (val.command == 'R')) {
         snprintf(buf, 11, "%010d", val.sum);
-        s.send(buf, 10);
+        if (s.send(buf, 10) < 0) throw runtime_error("connection shut down "
+                "mid transmission");
     }
     return s;
 }
