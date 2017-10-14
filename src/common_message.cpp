@@ -43,7 +43,7 @@ Transaction::Transaction() {
     s = new EmptyTransaction();
 }
 
-Transaction::Transaction(short error_code) {
+Transaction::Transaction(int error_code) {
     op = 'E';
     s = new ErrorTransaction(error_code);
 }
@@ -142,7 +142,7 @@ Response::Response() {
     s = new EmptyTransaction();
 }
 
-Response::Response(short error_code) {
+Response::Response(int error_code) {
     op = 'E';
     s = new ErrorTransaction(error_code);
 }

@@ -22,7 +22,7 @@ class EmptyTransaction : public Specific_Transaction {
         throw std::runtime_error("transaction is empty");
     }
 
-    short getErrcode() { throw std::runtime_error("transaction is empty"); }
+    int getErrcode() { throw std::runtime_error("transaction is empty"); }
     unsigned int getCard() { throw std::runtime_error("transaction is empty"); }
     int getSum() { throw std::runtime_error("transaction is empty"); }
 };
@@ -39,7 +39,7 @@ class ShortTransaction : public Specific_Transaction {
     void deserialize(std::ifstream& s);
     void print(std::ostream& s);
 
-    short getErrcode() { throw std::runtime_error("is not an error"); }
+    int getErrcode() { throw std::runtime_error("is not an error"); }
     unsigned int getCard() { return card_number; }
     int getSum() { throw std::runtime_error("has no sum"); }
 };
@@ -57,24 +57,24 @@ class LongTransaction : public Specific_Transaction {
     void deserialize(std::ifstream& s);
     void print(std::ostream& s);
 
-    short getErrcode() { throw std::runtime_error("is not an error"); }
+    int getErrcode() { throw std::runtime_error("is not an error"); }
     unsigned int getCard() { return card_number; }
     int getSum() { return sum; }
 };
 
 class ErrorTransaction : public Specific_Transaction {
-    short error_code;
+    int error_code;
 
     public:
     ErrorTransaction() : ErrorTransaction(0) {}
-    ErrorTransaction(short error_code);
+    ErrorTransaction(int error_code);
 
     void send(TCPSocket& s);
     void receive(TCPSocket& s);
     void deserialize(std::ifstream& s);
     void print(std::ostream& s);
 
-    short getErrcode() { return error_code; }
+    int getErrcode() { return error_code; }
     unsigned int getCard() { throw std::runtime_error("is an error"); }
     int getSum() { throw std::runtime_error("is an error"); }
 };

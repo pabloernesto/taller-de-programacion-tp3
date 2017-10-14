@@ -16,7 +16,7 @@ class Specific_Transaction {
     virtual void deserialize(std::ifstream& s) = 0;
     virtual void print(std::ostream& s) = 0;
 
-    virtual short getErrcode() = 0;
+    virtual int getErrcode() = 0;
     virtual unsigned int getCard() = 0;
     virtual int getSum() = 0;
 };
@@ -34,7 +34,7 @@ class Message {
 
     public:
     char getOpcode() { return op; }
-    short getErrcode() { return s->getErrcode(); }
+    int getErrcode() { return s->getErrcode(); }
     unsigned int getCard() { return s->getCard(); }
     int getSum() { return s->getSum(); }
 
@@ -49,7 +49,7 @@ class Message {
 class Transaction : public Message {
     public:
     Transaction();
-    Transaction(short error_code);
+    Transaction(int error_code);
     Transaction(char opcode, unsigned int card_number);
     Transaction(char opcode, unsigned int card_number, int sum);
 
@@ -63,7 +63,7 @@ class Transaction : public Message {
 class Response : public Message {
     public:
     Response();
-    Response(short error_code);
+    Response(int error_code);
     Response(char opcode, unsigned int card_number);
     Response(char opcode, unsigned int card_number, int sum);
 

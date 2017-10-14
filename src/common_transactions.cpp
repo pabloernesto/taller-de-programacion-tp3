@@ -13,11 +13,11 @@ ShortTransaction::ShortTransaction(unsigned int card_number)
 LongTransaction::LongTransaction(unsigned int card_number, int sum)
         : card_number(card_number), sum(sum) {}
 
-ErrorTransaction::ErrorTransaction(short error_code) : error_code(error_code) {}
+ErrorTransaction::ErrorTransaction(int error_code) : error_code(error_code) {}
 
 void ErrorTransaction::send(TCPSocket& s) {
     char buf[6];
-    snprintf(buf, 6, "%05hd", error_code);
+    snprintf(buf, 6, "%05d", error_code);
     if (s.send(buf, 5) < 0) throw runtime_error("connection shut down "
             "mid transmission");
 }
@@ -26,7 +26,7 @@ void ErrorTransaction::receive(TCPSocket& s) {
     char buf[6];
     buf[5] = '\0';
     if (s.receive(buf, 5) < 0) throw runtime_error("connection shut down");
-    if (sscanf(buf, "%hd", &error_code) != 1)
+    if (sscanf(buf, "%d", &error_code) != 1)
         throw runtime_error("bad format: \"" + string(buf) + "\"");
 }
 
