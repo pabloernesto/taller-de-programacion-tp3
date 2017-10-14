@@ -14,4 +14,12 @@ class DB {
     void asignarMonto(unsigned int card, int sum);
 };
 
+class BadCard : public std::runtime_error {
+    using std::runtime_error::runtime_error;
+};
+
+class BadSum : public std::runtime_error {
+    using std::runtime_error::runtime_error;
+};
+
 #endif

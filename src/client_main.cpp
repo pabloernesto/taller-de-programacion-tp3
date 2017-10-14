@@ -25,6 +25,6 @@ int main(int argc, char** argv) {
 
         Response r;
         sock >> r;
-        cout << t << " -> " << r << endl;
+        cout << r << endl;
     }
 }

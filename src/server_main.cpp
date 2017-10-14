@@ -6,6 +6,12 @@
 
 using namespace std;
 
+static void agregarMonto(DB &db, Transaction &t, TCPSocket &s);
+static void forzarAgregarMonto(DB &db, Transaction &t, TCPSocket &s);
+static void registrarTarjeta(DB &db, Transaction &t, TCPSocket &s);
+static void consultarMonto(DB &db, Transaction &t, TCPSocket &s);
+static void asignarMonto(DB &db, Transaction &t, TCPSocket &s);
+
 int main(int argc, char** argv) {
     if (argc != 2) {
         cerr << "server <port>" << endl;
@@ -25,43 +31,85 @@ int main(int argc, char** argv) {
         try { socket >> t; }
         catch (exception) { break; }
 
-        Response r;
         switch (t.getOpcode()) {
-            case 'A':
-                try {
-                    int sum = db.agregarMonto(t.getCard(), t.getSum());
-                    r = Response('A', t.getCard(), sum);
-                    socket << r;
-                } catch (exception) { r = Response(1); socket << r; }
-                break;
-            case 'F':
-                try {
-                    int sum = db.forzarAgregarMonto(t.getCard(), t.getSum());
-                    r = Response('F', t.getCard(), sum);
-                    socket << r;
-                } catch (exception) { r = Response(2); socket << r; }
-                break;
-            case 'R':
-                try {
-                    db.registrarTarjeta(t.getCard());
-                    r = Response('R', t.getCard());
-                    socket << r;
-                } catch (exception) { r = Response(3); socket << r; }
-                break;
-            case 'P':
-                try {
-                    int sum = db.consultarMonto(t.getCard());
-                    r = Response('P', t.getCard(), sum);
-                    socket << r;
-                } catch (exception) { r = Response(4); socket << r; }
-                break;
-            case 'S':
-                try {
-                    db.asignarMonto(t.getCard(), t.getSum());
-                    r = Response('S', t.getCard(), t.getSum());
-                    socket << r;
-                } catch (exception) { r = Response(5); socket << r; }
-                break;
+            case 'A': agregarMonto(db, t, socket); break;
+            case 'F': forzarAgregarMonto(db, t, socket); break;
+            case 'R': registrarTarjeta(db, t, socket); break;
+            case 'P': consultarMonto(db, t, socket); break;
+            case 'S': asignarMonto(db, t, socket); break;
         }
+    }
+}
+
+static void agregarMonto(DB &db, Transaction &t, TCPSocket &s) {
+    try {
+        int m = db.agregarMonto(t.getCard(), t.getSum());
+        Response r('A', t.getCard(), m);
+        cout << t << " -> " << r << endl;
+        s << r;
+    } catch (BadCard) {
+        Response r(2);
+        cerr << t << " -> " << r << endl;
+        s << r;
+    } catch (BadSum) {
+        Response r(3);
+        cerr << t << " -> " << r << endl;
+        s << r;
+    }
+}
+
+static void forzarAgregarMonto(DB &db, Transaction &t, TCPSocket &s) {
+    try {
+        int m = db.forzarAgregarMonto(t.getCard(), t.getSum());
+        Response r('F', t.getCard(), m);
+        cout << t << " -> " << r << endl;
+        s << r;
+    } catch (BadCard) {
+        Response r(2);
+        cerr << t << " -> " << r << endl;
+        s << r;
+    } catch (BadSum) {
+        Response r(3);
+        cerr << t << " -> " << r << endl;
+        s << r;
+    }
+}
+
+static void registrarTarjeta(DB &db, Transaction &t, TCPSocket &s) {
+    try {
+        db.registrarTarjeta(t.getCard());
+        Response r('R', t.getCard());
+        cout << t << " -> " << r << endl;
+        s << r;
+    } catch (BadCard) {
+        Response r(4);
+        cerr << t << " -> " << r << endl;
+        s << r;
+    }
+}
+
+static void consultarMonto(DB &db, Transaction &t, TCPSocket &s) {
+    try {
+        int m = db.consultarMonto(t.getCard());
+        Response r('P', t.getCard(), m);
+        cout << t << " -> " << r << endl;
+        s << r;
+    } catch (BadCard) {
+        Response r(2);
+        cerr << t << " -> " << r << endl;
+        s << r;
+    }
+}
+
+static void asignarMonto(DB &db, Transaction &t, TCPSocket &s) {
+    try {
+        db.asignarMonto(t.getCard(), t.getSum());
+        Response r('S', t.getCard(), t.getSum());
+        cout << t << " -> " << r << endl;
+        s << r;
+    } catch (BadCard) {
+        Response r(2);
+        cerr << t << " -> " << r << endl;
+        s << r;
     }
 }
