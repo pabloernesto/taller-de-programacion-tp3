@@ -17,7 +17,7 @@ ErrorTransaction::ErrorTransaction(short error_code) : error_code(error_code) {}
 
 void ErrorTransaction::send(TCPSocket& s) {
     char buf[6];
-    snprintf(buf, 6, "%06hd", error_code);
+    snprintf(buf, 6, "%05hd", error_code);
     if (s.send(buf, 5) < 0) throw runtime_error("connection shut down "
             "mid transmission");
 }
@@ -36,7 +36,7 @@ void ErrorTransaction::deserialize(std::ifstream& s) {
 
 void ErrorTransaction::print(std::ostream& s) {
     char buf[6];
-    snprintf(buf, 6, "%06hd", error_code);
+    snprintf(buf, 6, "%05hd", error_code);
     s << buf;
 }
 
