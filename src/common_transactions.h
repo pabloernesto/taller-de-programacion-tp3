@@ -32,7 +32,7 @@ class ShortTransaction : public Specific_Transaction {
 
     public:
     ShortTransaction() : ShortTransaction(0) {}
-    ShortTransaction(unsigned int card_number);
+    explicit ShortTransaction(unsigned int card_number);
 
     void send(TCPSocket& s);
     void receive(TCPSocket& s);
@@ -67,7 +67,7 @@ class ErrorTransaction : public Specific_Transaction {
 
     public:
     ErrorTransaction() : ErrorTransaction(0) {}
-    ErrorTransaction(int error_code);
+    explicit ErrorTransaction(int error_code);
 
     void send(TCPSocket& s);
     void receive(TCPSocket& s);

@@ -7,7 +7,7 @@ class TCPSocket {
     socket_t socket;
     public:
     TCPSocket(const char* host, unsigned short port);
-    TCPSocket(socket_t socket);
+    explicit TCPSocket(socket_t socket);
     ~TCPSocket();
     int send(const char* buffer, int lenght);
     int receive(char* buffer, int lenght);
@@ -16,7 +16,7 @@ class TCPSocket {
 class TCPAcceptor {
     socket_t socket;
     public:
-    TCPAcceptor(unsigned short port);
+    explicit TCPAcceptor(unsigned short port);
     ~TCPAcceptor();
     TCPSocket accept();
 };

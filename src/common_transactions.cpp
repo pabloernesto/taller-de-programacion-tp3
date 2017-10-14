@@ -2,6 +2,7 @@
 
 #include "common_transactions.h"
 
+#include <string>
 #include <fstream>
 #include <arpa/inet.h>
 
@@ -17,7 +18,7 @@ ErrorTransaction::ErrorTransaction(int error_code) : error_code(error_code) {}
 
 void ErrorTransaction::send(TCPSocket& s) {
     char buf[6];
-    snprintf(buf, 6, "%05d", error_code);
+    snprintf(buf, sizeof(buf), "%05d", error_code);
     if (s.send(buf, 5) < 0) throw runtime_error("connection shut down "
             "mid transmission");
 }
@@ -36,13 +37,13 @@ void ErrorTransaction::deserialize(std::ifstream& s) {
 
 void ErrorTransaction::print(std::ostream& s) {
     char buf[6];
-    snprintf(buf, 6, "%05hd", error_code);
+    snprintf(buf, sizeof(buf), "%05hd", error_code);
     s << buf;
 }
 
 void ShortTransaction::send(TCPSocket& s) {
     char buf[11];
-    snprintf(buf, 11, "%010u", card_number);
+    snprintf(buf, sizeof(buf), "%010u", card_number);
     if (s.send(buf, 10) < 0) throw runtime_error("connection shut down "
             "mid transmission");
 }
@@ -62,13 +63,13 @@ void ShortTransaction::deserialize(std::ifstream& s) {
 
 void ShortTransaction::print(std::ostream& s) {
     char buf[11];
-    snprintf(buf, 11, "%010u", card_number);
+    snprintf(buf, sizeof(buf), "%010u", card_number);
     s << buf;
 }
 
 void LongTransaction::send(TCPSocket& s) {
     char buf[21];
-    snprintf(buf, 21, "%010u%010d", card_number, sum);
+    snprintf(buf, sizeof(buf), "%010u%010d", card_number, sum);
     if (s.send(buf, 20) < 0) throw runtime_error("connection shut down "
             "mid transmission");
 }
@@ -91,6 +92,6 @@ void LongTransaction::deserialize(std::ifstream& s) {
 
 void LongTransaction::print(std::ostream& s) {
     char buf[21];
-    snprintf(buf, 21, "%010u%010d", card_number, sum);
+    snprintf(buf, sizeof(buf), "%010u%010d", card_number, sum);
     s << buf;
 }

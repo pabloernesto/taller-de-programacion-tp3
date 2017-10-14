@@ -49,7 +49,7 @@ class Message {
 class Transaction : public Message {
     public:
     Transaction();
-    Transaction(int error_code);
+    explicit Transaction(int error_code);
     Transaction(char opcode, unsigned int card_number);
     Transaction(char opcode, unsigned int card_number, int sum);
 
@@ -63,7 +63,7 @@ class Transaction : public Message {
 class Response : public Message {
     public:
     Response();
-    Response(int error_code);
+    explicit Response(int error_code);
     Response(char opcode, unsigned int card_number);
     Response(char opcode, unsigned int card_number, int sum);
 
