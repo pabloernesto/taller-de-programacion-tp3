@@ -7,7 +7,9 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-    TCPSocket sock("127.0.0.1", 8080);
+    short port = 8080;
+    if (argv[1]) sscanf(argv[1], "%hd", &port);
+    TCPSocket sock("127.0.0.1", port);
     ifstream file("data.bin", ios::in | ios::binary);
 
     while (file.peek() != ifstream::traits_type::eof()) {

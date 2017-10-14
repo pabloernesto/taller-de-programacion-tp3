@@ -18,7 +18,7 @@ std::ostream& operator<<(std::ostream& s, Message& val) {
 
 // Send through a TCPSocket
 TCPSocket& operator>>(TCPSocket& s, Message& val) {
-    val.send(s);
+    val.receive(s);
     return s;
 }
 
