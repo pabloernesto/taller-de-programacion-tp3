@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "common_net.h"
-#include "common_transaction.h"
+#include "common_message.h"
 
 using namespace std;
 
@@ -14,6 +14,6 @@ int main(int argc, char** argv) {
     while (true) {
         try { socket >> t; }
         catch (exception) { break; }
-        cout << t.getCommand();
+        cout << t;
     }
 }

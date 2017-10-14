@@ -2,7 +2,7 @@
 #include <fstream>
 
 #include "common_net.h"
-#include "common_transaction.h"
+#include "common_message.h"
 
 using namespace std;
 

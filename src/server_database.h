@@ -6,7 +6,7 @@
 
 class DB {
     std::map<unsigned int, int> cards{{0, INT_MAX}};
-public:
+    public:
     int agregarMonto(unsigned int card, int sum);
     int forzarAgregarMonto(unsigned int card, int sum);
     int consultarMonto(unsigned int card);
