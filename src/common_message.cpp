@@ -38,10 +38,6 @@ void Message::send(TCPSocket& s) {
     this->s->send(s);
 }
 
-void send(TCPSocket& s) {
-}
-
-
 Transaction::Transaction() {
     op = '\0';
     s = new EmptyTransaction();
