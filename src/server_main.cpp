@@ -47,10 +47,18 @@ int main(int argc, char** argv) {
     thread thread_spinner(spinner);
 
     while (true) {
-        if (cin.peek() == EOF) { acceptor.shutdown(); thread_spinner.join(); }
+        if (cin.peek() == EOF) {
+            acceptor.shutdown();
+            thread_spinner.join();
+            break;
+        }
         char c;
         cin >> c;
-        if (c == 'q') { acceptor.shutdown(); thread_spinner.join(); }
+        if (c == 'q') {
+            acceptor.shutdown();
+            thread_spinner.join();
+            break;
+        }
     }
 }
 
