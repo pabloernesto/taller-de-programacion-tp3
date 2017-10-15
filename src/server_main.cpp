@@ -19,7 +19,7 @@ class Spinner {
     DB &db;
 
     public:
-    Spinner(TCPAcceptor& acceptor, DB &db);
+    Spinner(TCPAcceptor &acceptor, DB &db);
     void operator()();
 };
 
@@ -127,7 +127,7 @@ static void asignarMonto(DB &db, Transaction &t, TCPSocket &s) {
     }
 }
 
-Spinner::Spinner(TCPAcceptor& acceptor, DB &db) : acceptor(acceptor), db(db) {}
+Spinner::Spinner(TCPAcceptor &acceptor, DB &db) : acceptor(acceptor), db(db) {}
 
 void Spinner::operator()() {
     vector<std::thread> threads;
@@ -138,7 +138,7 @@ void Spinner::operator()() {
             threads.emplace_back(move(dm));
         } catch (std::exception) { break; }
     }
-    //~ for (unsigned int i = 0; i < threads.size(); i++) threads[i].join();
+    for (unsigned int i = 0; i < threads.size(); i++) threads[i].join();
 }
 
 Doorman::Doorman(TCPSocket socket, DB &db) : socket(move(socket)), db(db) {}
