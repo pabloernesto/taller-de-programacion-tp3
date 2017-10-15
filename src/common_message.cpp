@@ -144,10 +144,12 @@ void Transaction::deserialize(std::ifstream& s) {
         throw runtime_error("bad card " + to_string(this->s->getCard())
                 + " cheksum " + to_string(meta[0]));
 
-    // If there is no sum to check, we are done and return
-    bitset<32> sum;
-    try { sum = this->s->getSum(); } catch (exception) { return; }
-    if (sum.count() != meta[1]) throw runtime_error("bad sum "
+    int sum_checksum = 0;
+    try {
+        bitset<32> sum = this->s->getSum();
+        sum_checksum  = sum.count();
+    } catch (exception) {} // Do nothing since the checksum is already 0.
+    if (sum_checksum != meta[1]) throw runtime_error("bad sum "
             + to_string(this->s->getSum()) + " checksum " + to_string(meta[1]));
 }
 
