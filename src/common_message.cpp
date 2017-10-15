@@ -28,6 +28,10 @@ TCPSocket& operator<<(TCPSocket& s, Message& val) {
     return s;
 }
 
+Message::~Message() {
+    if (this->s != nullptr) free(s);
+}
+
 void Message::print(std::ostream& s) {
     s << op;
     this->s->print(s);
@@ -69,6 +73,7 @@ std::ifstream& operator>>(std::ifstream& s, Transaction& val) {
 void Transaction::receive(TCPSocket& s) {
     if (s.receive(&op, 1) < 0) throw runtime_error("connection shut down");
 
+    if (this->s != nullptr) { free(this->s); this->s = nullptr; };
     if (op == 'F') this->s = new LongTransaction();
     else if (op == 'R') this->s = new ShortTransaction();
     else if (op == 'A') this->s = new LongTransaction();
@@ -119,6 +124,7 @@ void Transaction::deserialize(std::ifstream& s) {
     else if (meta[2] == 4) op = 'S';
     else throw runtime_error("unknown operation " + to_string(meta[2]));
 
+    if (this->s != nullptr) { free(this->s); this->s = nullptr; };
     switch (op) {
         case 'A': case 'F': case 'S': this->s = new LongTransaction(); break;
         case 'R': case 'P': this->s = new ShortTransaction(); break;
@@ -162,6 +168,7 @@ Response::Response(char opcode, unsigned int card_number, int sum) {
 void Response::receive(TCPSocket& s) {
     if (s.receive(&op, 1) < 0) throw runtime_error("connection shut down");
 
+    if (this->s != nullptr) { free(this->s); this->s = nullptr; };
     if (op == 'F') this->s = new LongTransaction();
     else if (op == 'R') this->s = new ShortTransaction();
     else if (op == 'A') this->s = new LongTransaction();

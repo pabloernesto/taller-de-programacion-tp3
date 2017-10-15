@@ -33,6 +33,8 @@ class Message {
     virtual void receive(TCPSocket& s) = 0;
 
     public:
+    ~Message();
+
     char getOpcode() { return op; }
     int getErrcode() { return s->getErrcode(); }
     unsigned int getCard() { return s->getCard(); }
