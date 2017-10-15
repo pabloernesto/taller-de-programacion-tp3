@@ -15,7 +15,7 @@ TCPSocket::TCPSocket(const char* host, unsigned short port) {
         socket_destroy(&(this->socket));
         throw runtime_error("Could not connect to port " +
                 to_string(port) + " on host " + host + " "
-                "socket_create failed with code " + to_string(errcode));
+                "socket_connect failed with code " + to_string(errcode));
     }
 }
 
