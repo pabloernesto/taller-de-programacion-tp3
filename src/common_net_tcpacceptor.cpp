@@ -34,3 +34,7 @@ TCPSocket TCPAcceptor::accept() {
 
     return TCPSocket(accepted_socket);
 }
+
+void TCPAcceptor::shutdown() {
+    socket_shutdown(&(this->socket));
+}
