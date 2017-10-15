@@ -20,8 +20,12 @@ int main(int argc, char** argv) {
 
     while (file.peek() != ifstream::traits_type::eof()) {
         Transaction t;
-        file >> t;
-        sock << t;
+        try {
+            file >> t;
+            sock << t;
+        } catch (std::exception) {
+            cout << "E00001" << endl;
+        }
 
         Response r;
         sock >> r;
