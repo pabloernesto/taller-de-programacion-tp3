@@ -24,7 +24,8 @@ int main(int argc, char** argv) {
             file >> t;
             sock << t;
         } catch (std::exception) {
-            cout << "E00001" << endl;
+            cout << t << " -> " << "E00001" << endl;
+            continue;
         }
 
         Response r;
