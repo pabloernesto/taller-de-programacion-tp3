@@ -139,17 +139,22 @@ void Transaction::deserialize(std::ifstream& s) {
     }
     this->s->deserialize(s);
 
+    /* This checksum must be loaded modulo-32 because the binary storage
+     * has only 5 bits of capacity.
+     */
+    int checksum;
+
     bitset<32> card = this->s->getCard();
-    if (card.count() != meta[0])
+    checksum = card.count() % 32;
+    if (checksum != meta[0])
         throw runtime_error("bad card " + to_string(this->s->getCard())
                 + " cheksum " + to_string(meta[0]));
 
-    int sum_checksum = 0;
     try {
         bitset<32> sum = this->s->getSum();
-        sum_checksum  = sum.count();
-    } catch (exception) {} // Do nothing since the checksum is already 0.
-    if (sum_checksum != meta[1]) throw runtime_error("bad sum "
+        checksum  = sum.count() % 32;
+    } catch (exception) { checksum = 0; }
+    if (checksum != meta[1]) throw runtime_error("bad sum "
             + to_string(this->s->getSum()) + " checksum " + to_string(meta[1]));
 }
 
