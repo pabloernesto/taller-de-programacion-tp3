@@ -1,5 +1,6 @@
 #include "common_net.h"
 #include <iostream>
+#include <memory>
 
 #ifndef MESSAGE_H
 #define MESSAGE_H
@@ -24,7 +25,7 @@ class Specific_Transaction {
 class Message {
     protected:
     char op;
-    Specific_Transaction *s;
+    std::unique_ptr<Specific_Transaction> s;
 
     private:
     void print(std::ostream& s);

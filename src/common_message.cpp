@@ -5,7 +5,7 @@
 #include <fstream>
 #include <bitset>
 #include <exception>
-
+#include <memory>
 #include <arpa/inet.h>
 
 using namespace std;
@@ -29,7 +29,6 @@ TCPSocket& operator<<(TCPSocket& s, Message& val) {
 }
 
 Message::~Message() {
-    if (this->s != nullptr) free(s);
 }
 
 void Message::print(std::ostream& s) {
@@ -44,24 +43,24 @@ void Message::send(TCPSocket& s) {
 
 Transaction::Transaction() {
     op = '\0';
-    s = new EmptyTransaction();
+    s = unique_ptr<Specific_Transaction>(new EmptyTransaction());
 }
 
 Transaction::Transaction(int error_code) {
     op = 'E';
-    s = new ErrorTransaction(error_code);
+    s = unique_ptr<Specific_Transaction>(new ErrorTransaction(error_code));
 }
 
 Transaction::Transaction(char opcode, unsigned int card_number) {
     //verify op
     op = opcode;
-    s = new ShortTransaction(card_number);
+    s = unique_ptr<Specific_Transaction>(new ShortTransaction(card_number));
 }
 
 Transaction::Transaction(char opcode, unsigned int card_number, int sum) {
     //verify op
     op = opcode;
-    s = new LongTransaction(card_number, sum);
+    s = unique_ptr<Specific_Transaction>(new LongTransaction(card_number, sum));
 }
 
 // Read from binary file
@@ -73,14 +72,20 @@ std::ifstream& operator>>(std::ifstream& s, Transaction& val) {
 void Transaction::receive(TCPSocket& s) {
     if (s.receive(&op, 1) < 0) throw runtime_error("connection shut down");
 
-    if (this->s != nullptr) { free(this->s); this->s = nullptr; };
-    if (op == 'F') this->s = new LongTransaction();
-    else if (op == 'R') this->s = new ShortTransaction();
-    else if (op == 'A') this->s = new LongTransaction();
-    else if (op == 'P') this->s = new ShortTransaction();
-    else if (op == 'S') this->s = new LongTransaction();
-    else if (op == 'E') this->s = new ErrorTransaction();
-    else throw runtime_error("unknown operation " + to_string(op));
+    if (op == 'F')
+        this->s = unique_ptr<Specific_Transaction>(new LongTransaction());
+    else if (op == 'R')
+        this->s = unique_ptr<Specific_Transaction>(new ShortTransaction());
+    else if (op == 'A')
+        this->s = unique_ptr<Specific_Transaction>(new LongTransaction());
+    else if (op == 'P')
+        this->s = unique_ptr<Specific_Transaction>(new ShortTransaction());
+    else if (op == 'S')
+        this->s = unique_ptr<Specific_Transaction>(new LongTransaction());
+    else if (op == 'E')
+        this->s = unique_ptr<Specific_Transaction>(new ErrorTransaction());
+    else
+        throw runtime_error("unknown operation " + to_string(op));
 
     this->s->receive(s);
 }
@@ -124,10 +129,13 @@ void Transaction::deserialize(std::ifstream& s) {
     else if (meta[2] == 4) op = 'S';
     else throw runtime_error("unknown operation " + to_string(meta[2]));
 
-    if (this->s != nullptr) { free(this->s); this->s = nullptr; };
     switch (op) {
-        case 'A': case 'F': case 'S': this->s = new LongTransaction(); break;
-        case 'R': case 'P': this->s = new ShortTransaction(); break;
+        case 'A': case 'F': case 'S':
+            this->s = unique_ptr<Specific_Transaction>(new LongTransaction());
+            break;
+        case 'R': case 'P':
+            this->s = unique_ptr<Specific_Transaction>(new ShortTransaction());
+            break;
     }
     this->s->deserialize(s);
 
@@ -145,36 +153,35 @@ void Transaction::deserialize(std::ifstream& s) {
 
 Response::Response() {
     op = '\0';
-    s = new EmptyTransaction();
+    s = unique_ptr<Specific_Transaction>(new EmptyTransaction());
 }
 
 Response::Response(int error_code) {
     op = 'E';
-    s = new ErrorTransaction(error_code);
+    s = unique_ptr<Specific_Transaction>(new ErrorTransaction(error_code));
 }
 
 Response::Response(char opcode, unsigned int card_number) {
     //verify op
     op = opcode;
-    s = new ShortTransaction(card_number);
+    s = unique_ptr<Specific_Transaction>(new ShortTransaction(card_number));
 }
 
 Response::Response(char opcode, unsigned int card_number, int sum) {
     //verify op
     op = opcode;
-    s = new LongTransaction(card_number, sum);
+    s = unique_ptr<Specific_Transaction>(new LongTransaction(card_number, sum));
 }
 
 void Response::receive(TCPSocket& s) {
     if (s.receive(&op, 1) < 0) throw runtime_error("connection shut down");
 
-    if (this->s != nullptr) { free(this->s); this->s = nullptr; };
-    if (op == 'F') this->s = new LongTransaction();
-    else if (op == 'R') this->s = new ShortTransaction();
-    else if (op == 'A') this->s = new LongTransaction();
-    else if (op == 'P') this->s = new LongTransaction();
-    else if (op == 'S') this->s = new LongTransaction();
-    else if (op == 'E') this->s = new ErrorTransaction();
+    if (op == 'F') this->s = unique_ptr<Specific_Transaction>(new LongTransaction());
+    else if (op == 'R') this->s = unique_ptr<Specific_Transaction>(new ShortTransaction());
+    else if (op == 'A') this->s = unique_ptr<Specific_Transaction>(new LongTransaction());
+    else if (op == 'P') this->s = unique_ptr<Specific_Transaction>(new LongTransaction());
+    else if (op == 'S') this->s = unique_ptr<Specific_Transaction>(new LongTransaction());
+    else if (op == 'E') this->s = unique_ptr<Specific_Transaction>(new ErrorTransaction());
     else throw runtime_error("unknown operation " + to_string(op));
 
     this->s->receive(s);
